@@ -9,6 +9,10 @@ provider "aws" {
 /**
  * Outputs
  */
+output "vpc_id" {
+    value = "${aws_vpc.default.id}"
+}
+
 output "public_subnet_ids" {
     value = "${join(",", aws_subnet.public_subnet.*.id)}"
 }
