@@ -20,30 +20,41 @@ provider "aws" {
     }
 }
 
-# A list of availability zones in eu-west-1 we'll assign subnets to.
-variable "availability_zones" {
-    default = {
-        "0" = "eu-west-1a"
-        "1" = "eu-west-1b"
-        "2" = "eu-west-1c"
-    }
-}
-
 /**
  * Public Subnets
  *
  * @see https://www.terraform.io/docs/providers/aws/r/subnet.html
  */
-resource "aws_subnet" "public_subnet" {
-    count = "3"
-
+resource "aws_subnet" "public_subnet_a" {
     vpc_id = "${aws_vpc.default.id}"
-    availability_zone = "${lookup(var.availability_zones, count.index)}"
-    cidr_block = "10.0.${count.index}.0/24"
+    availability_zone = "eu-west-1a"
+    cidr_block = "10.0.0.0/24"
     map_public_ip_on_launch = true
 
     tags {
-        Name = "Default ${lookup(var.availability_zones, count.index)} Public Subnet"
+        Name = "Default eu-west-1a Public Subnet"
+    }
+}
+
+resource "aws_subnet" "public_subnet_b" {
+    vpc_id = "${aws_vpc.default.id}"
+    availability_zone = "eu-west-1b"
+    cidr_block = "10.0.1.0/24"
+    map_public_ip_on_launch = true
+
+    tags {
+        Name = "Default eu-west-1b Public Subnet"
+    }
+}
+
+resource "aws_subnet" "public_subnet_c" {
+    vpc_id = "${aws_vpc.default.id}"
+    availability_zone = "eu-west-1c"
+    cidr_block = "10.0.2.0/24"
+    map_public_ip_on_launch = true
+
+    tags {
+        Name = "Default eu-west-1c Public Subnet"
     }
 }
 
@@ -52,16 +63,36 @@ resource "aws_subnet" "public_subnet" {
  *
  * @see https://www.terraform.io/docs/providers/aws/r/subnet.html
  */
-resource "aws_subnet" "private_subnet" {
-    count = "3"
-
+resource "aws_subnet" "private_subnet_a" {
     vpc_id = "${aws_vpc.default.id}"
-    availability_zone = "${lookup(var.availability_zones, count.index)}"
-    cidr_block = "10.0.${count.index + 3}.0/24"
+    availability_zone = "eu-west-1a"
+    cidr_block = "10.0.3.0/24"
     map_public_ip_on_launch = false
 
     tags {
-        Name = "Default ${lookup(var.availability_zones, count.index)} Private Subnet"
+        Name = "Default eu-west-1a Private Subnet"
+    }
+}
+
+resource "aws_subnet" "private_subnet_b" {
+    vpc_id = "${aws_vpc.default.id}"
+    availability_zone = "eu-west-1a"
+    cidr_block = "10.0.4.0/24"
+    map_public_ip_on_launch = false
+
+    tags {
+        Name = "Default eu-west-1b Private Subnet"
+    }
+}
+
+resource "aws_subnet" "private_subnet_c" {
+    vpc_id = "${aws_vpc.default.id}"
+    availability_zone = "eu-west-1c"
+    cidr_block = "10.0.5.0/24"
+    map_public_ip_on_launch = false
+
+    tags {
+        Name = "Default eu-west-1c Private Subnet"
     }
 }
 
