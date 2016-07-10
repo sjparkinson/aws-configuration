@@ -138,6 +138,17 @@ resource "aws_default_network_acl" "default" {
     }
 }
 
+/**
+ * Routes
+ *
+ * We need to map the Internet Gateway to our VPC with a route to allow instances
+ * in public subnets access to the internet.
+ */
+ resource "aws_route" "internet_gateway_route" {
+     route_table_id = "${aws_vpc.default.main_route_table_id}"
+     destination_cidr_block = "0.0.0.0/0"
+     gateway_id = "${aws_internet_gateway.default.id}"
+ }
 
 /**
  * Security Group
