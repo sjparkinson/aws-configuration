@@ -1,28 +1,16 @@
 /**
+ * Variables
+ */
+variable "aws_region" {
+    type = "string"
+}
+
+/**
  * Provider
  */
 provider "aws" {
     # Use the standard AWS CLI configuration file or environment variables.
-    region = "eu-west-1"
-}
-
-/**
- * Outputs
- */
-output "vpc_id" {
-    value = "${aws_vpc.default.id}"
-}
-
-output "public_subnet_ids" {
-    value = "${join(",", aws_subnet.public_subnet.*.id)}"
-}
-
-output "private_subnet_ids" {
-    value = "${join(",", aws_subnet.private_subnet.*.id)}"
-}
-
-output "key_name" {
-    value = "${aws_key_pair.default.key_name}"
+    region = "${var.aws_region}"
 }
 
 /**
