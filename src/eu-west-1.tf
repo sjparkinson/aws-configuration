@@ -1,6 +1,20 @@
-# Use the standard AWS CLI configuration file or environment variables.
+/**
+ * Provider
+ */
 provider "aws" {
+    # Use the standard AWS CLI configuration file or environment variables.
     region = "eu-west-1"
+}
+
+/**
+ * Outputs
+ */
+output "public_subnet_ids" {
+    value = "${join(aws_subnet.public_subnet.*.id, ",")}"
+}
+
+output "private_subnet_ids" {
+    value = "${join(aws_subnet.private_subnet.*.id, ",")}"
 }
 
 /**
