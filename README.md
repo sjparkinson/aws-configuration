@@ -2,6 +2,12 @@
 
 VPCs under managment are `eu-west-1`.
 
-FYIs:
+## Configure Terraform Remote State
 
-* The default _route table_ is not defined here.
+```
+terraform remote config \
+    -backend=s3 \
+    -backend-config="bucket=mainthread-technology-logs" \
+    -backend-config="key=terraform/eu-west-1/terraform.tfstate" \
+    -backend-config="region=eu-west-1"
+```
