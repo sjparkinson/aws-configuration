@@ -140,15 +140,41 @@ resource "aws_default_network_acl" "default" {
 
 /**
  * Routes
- *
- * We need to map the Internet Gateway to our VPC with a route to allow instances
- * in public subnets access to the internet.
  */
- resource "aws_route" "internet_gateway_route" {
-     route_table_id = "${aws_vpc.default.main_route_table_id}"
-     destination_cidr_block = "0.0.0.0/0"
-     gateway_id = "${aws_internet_gateway.default.id}"
- }
+resource "aws_route" "public_internet_gateway_route" {
+    # We need to map the Internet Gateway to our VPC with a route to allow instances
+    # in public subnets access to the internet.
+    route_table_id = "${aws_vpc.default.main_route_table_id}"
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.default.id}"
+}
+
+resource "aws_route_table" "private_route_table" {
+    vpc_id = "${aws_vpc.default.id}"
+
+    # By default AWS creates the `local` route mapping we need.
+
+    tags {
+        Name = "Default eu-west-1 Private Route Table"
+    }
+}
+
+/**
+ * Route Accociations
+ */
+resource "aws_route_table_association" "public_subnets" {
+    count = "3"
+
+    subnet_id = "${element(aws_subnet.public_subnet.*.id, count.index)}"
+    route_table_id = "${aws_vpc.default.main_route_table_id}"
+}
+
+resource "aws_route_table_association" "private_subnets" {
+    count = "3"
+
+    subnet_id = "${element(aws_subnet.private_subnet.*.id, count.index)}"
+    route_table_id = "${aws_route_table.private_route_table.id}"
+}
 
 /**
  * Security Group
